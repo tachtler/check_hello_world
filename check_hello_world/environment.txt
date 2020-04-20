@@ -1,13 +1,27 @@
 Environment (Example):
 ======================
 
-# cd /home/klaus/eclipse-pynagios
+# cd /home/klaus/git/check_hello_world
 # python3 -m venv check_hello_world
-# cd /home/klaus/eclipse-pynagios/check_hello_world
+# cd /home/klaus/git/check_hello_world/check_hello_world
 # source bin/activate
 # pip install nagiosplugin
 # pip freeze > requirements.txt
 
+Upload:
+=======
+
+https://packaging.python.org/
+
+# python3 -m pip install --upgrade twine
+
+TEST:
+----
+# python3 -m twine upload --repository-url https://test.pypi.org/legacy/ dist/*
+
+PROD:
+----
+# python3 -m twine upload --repository-url https://pypi.org/legacy/ dist/*
 
 Documentation:
 ==============
