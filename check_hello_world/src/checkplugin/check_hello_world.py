@@ -38,9 +38,9 @@ from argparse import RawDescriptionHelpFormatter
 import nagiosplugin
 
 __all__ = []
-__version__ = 0.1
+__version__ = '0.1.1'
 __date__ = '2020-04-19'
-__updated__ = '2020-04-19'
+__updated__ = '2020-04-20'
 __author__ = 'Klaus Tachtler <klaus@tachtler.net>'
 __organisation__ = 'Klaus Tachtler'
 
@@ -115,7 +115,7 @@ def cli_parser(argv=None):  # IGNORE:C0111
   or conditions of any kind, either express or implied.
 
 USAGE
-''' % (program_shortdesc, __author__, str(__date__), __organisation__)
+''' % (program_shortdesc, __author__, str(__updated__), __organisation__)
 
     try:
         # Setup argument parser
@@ -161,14 +161,19 @@ USAGE
             nargs='?',
             default=None,
             type=str,
+            required=True,
             help='Numeric argument value, to check against.',
             metavar='VALUE',
             dest='argument')
 
+        # Add -h, --help message, if no argument was set.
+        if len(sys.argv) == 1:
+            parser.print_help(sys.stderr)
+
         # Process arguments
         args = parser.parse_args()
 
-        # Chek if DEBUG mode was enabled.
+        # Check if DEBUG mode was enabled.
         if args.debug:
             args.debug = True
             logging.basicConfig(level=logging.DEBUG)
@@ -198,10 +203,6 @@ USAGE
             __log__.debug(__keyvalueFormatDebug__.format(
                 "DEBUG - cli_parser", "ended"))
             __log__.debug('=' * __charCountDebug__)
-
-        # Check -a, --argument
-        if args.argument is None:
-            raise CLIError("Required argument -a, --argument - NOT set!")
 
         return args
     except KeyboardInterrupt:
