@@ -1,4 +1,4 @@
-#!/usr/local/bin/python2.7
+#!/usr/bin/env python3
 # encoding: utf-8
 '''
 check_hello_world.py is a basic nagios/icinga plugin for demonstration purpose.
@@ -89,7 +89,8 @@ def cli_parser(argv=None):  # IGNORE:C0111
   https://www.tachtler.net''' % __version__
     program_build_date = str(__updated__)
     program_version_message = '%%(prog)s (%s) %s' % (program_build_date, program_version)
-    program_shortdesc = __import__('__main__').__doc__.split("\n")[1]
+    program_shortdesc = 'check_hello_world.py is a basic nagios/icinga plugin '
+    'for demonstration purpose.'
     program_license = '''%s
 
   Created by %s on %s.
