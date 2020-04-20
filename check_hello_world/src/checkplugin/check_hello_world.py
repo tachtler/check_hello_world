@@ -331,11 +331,13 @@ def main():
         str(args.critical)))
 
     # Interpret a single value for warning and critical as minimum value.
-    if __RANGE__ not in args.warning:
-        args.warning += __RANGE__
+    if args.warning is not None:
+        if __RANGE__ not in args.warning:
+            args.warning += __RANGE__
 
-    if __RANGE__ not in args.critical:
-        args.critical += __RANGE__
+    if args.critical is not None:
+        if __RANGE__ not in args.critical:
+            args.critical += __RANGE__
 
     __log__.debug(__keyvalueFormatDebug__.format(
         "DEBUG - main - args.warning (edit)",
