@@ -1,0 +1,5 @@
+eclipse.preferences.version=1
+encoding//lib/python3.6/site-packages/nagiosplugin/context.py=utf-8
+encoding//lib64/python3.6/site-packages/nagiosplugin/check.py=utf-8
+encoding//lib64/python3.6/site-packages/nagiosplugin/range.py=utf-8
+encoding//src/checkplugin/check_hello_world.py=utf-8

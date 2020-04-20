@@ -1,0 +1,24 @@
+Environment (Example):
+======================
+
+# cd /home/klaus/eclipse-pynagios
+# python3 -m venv check_hello_world
+# cd /home/klaus/eclipse-pynagios/check_hello_world
+# source bin/activate
+# pip install nagiosplugin
+# pip freeze > requirements.txt
+
+
+Documentation:
+==============
+
+# https://docs.python.org/3.6/tutorial/venv.html
+# https://nagiosplugin.readthedocs.io/en/stable/index.html
+# https://github.com/mpounsett/nagiosplugin
+# https://github.com/pypa/sampleproject
+
+
+Code quality:
+=============
+
+# pylint-3 /home/klaus/eclipse-pynagios/check_hello_world/src/checkplugin/check_hello_world.py
