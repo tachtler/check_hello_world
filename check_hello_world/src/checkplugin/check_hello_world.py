@@ -38,9 +38,9 @@ from argparse import RawDescriptionHelpFormatter
 import nagiosplugin
 
 __all__ = []
-__version__ = '0.1.1'
+__version__ = '0.1.2'
 __date__ = '2020-04-19'
-__updated__ = '2020-04-20'
+__updated__ = '2020-04-24'
 __author__ = 'Klaus Tachtler <klaus@tachtler.net>'
 __organisation__ = 'Klaus Tachtler'
 
@@ -51,7 +51,7 @@ __OK__ = 0
 __WARNING__ = 1
 __CRICITAL__ = 2
 __UNKONWN__ = 3
-__RANGE__ = ':'
+__RANGE_SYMBOL__ = ':'
 
 __DEBUG__ = False
 __TESTRUN__ = False
@@ -188,15 +188,15 @@ USAGE
                 str(args.verbose)))
 
             __log__.debug(__keyvalueFormatDebug__.format(
-                "DEBUG - cli_parser -a, --argument",
+                "DEBUG - -a, --argument",
                 str(args.argument)))
 
             __log__.debug(__keyvalueFormatDebug__.format(
-                "DEBUG - cli_parser -w, --warning",
+                "DEBUG - -w, --warning",
                 str(args.warning)))
 
             __log__.debug(__keyvalueFormatDebug__.format(
-                "DEBUG - cli_parser -c, --critical",
+                "DEBUG - -c, --critical",
                 str(args.critical)))
 
             __log__.debug('=' * __charCountDebug__)
@@ -216,59 +216,6 @@ USAGE
         return None
 
 
-class ScalarContext(nagiosplugin.context.ScalarContext):
-    '''Override nagiosplugin.context.ScalarContext'''
-
-    def evaluate(self, metric, resource):
-        '''Compares metric with ranges and determines result state.
-        The metric's value is compared to the instance's :attr:`warning`
-        and :attr:`critical` ranges, yielding an appropropiate state
-        depending on how the metric fits in the ranges. Plugin authors
-        may override this method in subclasses to provide custom
-        evaluation logic.
-        :param metric: metric that is to be evaluated
-        :param resource: not used
-        :returns: :class:`~nagiosplugin.result.Result` object
-        '''
-
-        __log__.debug('=' * __charCountDebug__)
-        __log__.debug(__keyvalueFormatDebug__.format(
-            "DEBUG - ScalaContext", "start"))
-        __log__.debug('=' * __charCountDebug__)
-
-        __log__.debug(__keyvalueFormatDebug__.format(
-            "DEBUG - ScalaContext -w, --warning",
-            str(self.warning)))
-
-        __log__.debug(__keyvalueFormatDebug__.format(
-            "DEBUG - ScalaContext -c, --critical",
-            str(self.critical)))
-
-        # Check if argument inside the warning or critical range.
-        result = None
-
-        # Compare the argument to the warning or critical range.
-        if not self.critical.match(metric.value) and str(self.critical) != '':
-            result = self.result_cls(
-                nagiosplugin.state.Critical,
-                'critical is {0}'.
-                format(self.critical), metric)
-        elif not self.warning.match(metric.value) and str(self.warning) != '':
-            result = self.result_cls(
-                nagiosplugin.state.Warn,
-                'warning is {0}'.
-                format(self.warning), metric)
-        else:
-            result = self.result_cls(nagiosplugin.state.Ok, None, metric)
-
-        __log__.debug('=' * __charCountDebug__)
-        __log__.debug(__keyvalueFormatDebug__.format(
-            "DEBUG - ScalaContext", "ended"))
-        __log__.debug('=' * __charCountDebug__)
-
-        return result
-
-
 class World(nagiosplugin.Resource):
     '''Data acquisition: Resource'''
 
@@ -284,7 +231,7 @@ class World(nagiosplugin.Resource):
         __log__.debug('=' * __charCountDebug__)
 
         __log__.debug(__keyvalueFormatDebug__.format(
-            "DEBUG - World - self.argument",
+            "DEBUG - self.argument",
             str(self.argument)))
 
         # Check if argument is a numeric.
@@ -306,6 +253,86 @@ class World(nagiosplugin.Resource):
         __log__.debug('=' * __charCountDebug__)
 
 
+class WorldSummary(nagiosplugin.Summary):
+    '''Data presentation: Summary'''
+
+    def ok(self, results):
+        '''Summary for result: OK'''
+
+        __log__.debug('=' * __charCountDebug__)
+        __log__.debug(__keyvalueFormatDebug__.format(
+            "DEBUG - WorldSummary", "start"))
+        __log__.debug('=' * __charCountDebug__)
+
+        __log__.debug(__keyvalueFormatDebug__.format(
+            "DEBUG - results[0].metric.context",
+            str(results[0].metric.context)))
+
+        __log__.debug(__keyvalueFormatDebug__.format(
+            "DEBUG - results[0].metric.value",
+            str(results[0].metric.value)))
+
+        __log__.debug('=' * __charCountDebug__)
+        __log__.debug(__keyvalueFormatDebug__.format(
+            "DEBUG - WorldSummary", "ended"))
+        __log__.debug('=' * __charCountDebug__)
+
+        return '%s is %s' % (
+            results[0].metric.context,
+            results[0].metric.value)
+
+    def problem(self, results):
+        '''Summary for result: CRITICAL or WARNING'''
+
+        __log__.debug('=' * __charCountDebug__)
+        __log__.debug(__keyvalueFormatDebug__.format(
+            "DEBUG - WorldSummary", "start"))
+        __log__.debug('=' * __charCountDebug__)
+
+        __log__.debug(__keyvalueFormatDebug__.format(
+            "DEBUG - results[0].state.code",
+            str(results[0].state.code)))
+
+        __log__.debug(__keyvalueFormatDebug__.format(
+            "DEBUG - results[0].metric.context",
+            str(results[0].metric.context)))
+
+        __log__.debug(__keyvalueFormatDebug__.format(
+            "DEBUG - results[0].metric.value",
+            str(results[0].metric.value)))
+
+        __log__.debug(__keyvalueFormatDebug__.format(
+            "DEBUG - results[0].state.text",
+            str(results[0].state.text)))
+
+        # Determine if critical, warning or unknown range are used.
+        if results[0].state.code == 2:
+            ranges = str(results[0].context.critical)
+        elif results[0].state.code == 1:
+            ranges = str(results[0].context.warning)
+        else:
+            ranges = ('unknown')
+
+        __log__.debug(__keyvalueFormatDebug__.format(
+            "DEBUG - ranges", ranges))
+
+        result = '%s is %s (%s range %s)' % (
+            results[0].metric.context,
+            results[0].metric.value,
+            results[0].state.text,
+            ranges)
+
+        __log__.debug(__keyvalueFormatDebug__.format(
+            "DEBUG - result", result))
+
+        __log__.debug('=' * __charCountDebug__)
+        __log__.debug(__keyvalueFormatDebug__.format(
+            "DEBUG - WorldSummary", "ended"))
+        __log__.debug('=' * __charCountDebug__)
+
+        return result
+
+
 def main():
     '''Main.'''
 
@@ -324,28 +351,28 @@ def main():
     __log__.debug('=' * __charCountDebug__)
 
     __log__.debug(__keyvalueFormatDebug__.format(
-        "DEBUG - main - args.warning (orig)",
+        "DEBUG - args.warning (orig)",
         str(args.warning)))
 
     __log__.debug(__keyvalueFormatDebug__.format(
-        "DEBUG - main - args.critical (orig)",
+        "DEBUG - args.critical (orig)",
         str(args.critical)))
 
     # Interpret a single value for warning and critical as minimum value.
     if args.warning is not None:
-        if __RANGE__ not in args.warning:
-            args.warning += __RANGE__
+        if __RANGE_SYMBOL__ not in args.warning:
+            args.warning += __RANGE_SYMBOL__
 
     if args.critical is not None:
-        if __RANGE__ not in args.critical:
-            args.critical += __RANGE__
+        if __RANGE_SYMBOL__ not in args.critical:
+            args.critical += __RANGE_SYMBOL__
 
     __log__.debug(__keyvalueFormatDebug__.format(
-        "DEBUG - main - args.warning (edit)",
+        "DEBUG - args.warning (edit)",
         str(args.warning)))
 
     __log__.debug(__keyvalueFormatDebug__.format(
-        "DEBUG - main - args.critical (edit)",
+        "DEBUG - args.critical (edit)",
         str(args.critical)))
 
     __log__.debug('=' * __charCountDebug__)
@@ -356,7 +383,8 @@ def main():
     # Determine a result.
     check = nagiosplugin.Check(
         World(args.argument),
-        ScalarContext('argument', args.warning, args.critical))
+        nagiosplugin.ScalarContext('argument', args.warning, args.critical),
+        WorldSummary())
     check.main(verbose=args.verbose)
 
 
