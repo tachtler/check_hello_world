@@ -7,7 +7,7 @@ https://github.com/pypa/sampleproject
 Tachtler:
 # pip install wheel
 # python3 setup.py install
-# python3 setup.py sdist bdist_wheel
+# python3 setup.py sdist bdist_wheel bdist_rpm
 """
 
 # Always prefer setuptools over distutils
@@ -20,11 +20,6 @@ from os import path
 from io import open
 
 here = path.abspath(path.dirname(__file__))
-
-# Tachtler - NEW - 
-# Read requirements from file.
-with open('requirements.txt') as f: 
-    requirements = f.readlines() 
 
 # Get the long description from the README file
 with open(path.join(here, 'README.md'), encoding='utf-8') as f:
@@ -53,7 +48,7 @@ setup(
     # For a discussion on single-sourcing the version across setup.py and the
     # project code, see
     # https://packaging.python.org/en/latest/single_source_version.html
-    version='0.1.1',  # Required
+    version='0.1.2',  # Required
 
     # This is a one-line description or tagline of what your project does. This
     # corresponds to the "Summary" metadata field:
@@ -117,10 +112,10 @@ setup(
         # that you indicate whether you support Python 2, Python 3 or both.
         # These classifiers are *not* checked by 'pip install'. See instead
         # 'python_requires' below.
-        #'Programming Language :: Python :: 2',
-        #'Programming Language :: Python :: 2.7',
-        #'Programming Language :: Python :: 3',
-        #'Programming Language :: Python :: 3.5',
+        # 'Programming Language :: Python :: 2',
+        # 'Programming Language :: Python :: 2.7',
+        # 'Programming Language :: Python :: 3',
+        # 'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
@@ -162,7 +157,7 @@ setup(
     # https://packaging.python.org/en/latest/requirements.html
     # Tachtler
     # default: install_requires=['nagiosplugin'],  # Optional
-    install_requires = requirements,
+    install_requires=['nagiosplugin>=1.3.2'],
 
     # List additional groups of dependencies here (e.g. development
     # dependencies). Users will be able to install these using the "extras"
@@ -172,26 +167,26 @@ setup(
     #
     # Similar to `install_requires` above, these must be valid existing
     # projects.
-    #extras_require={  # Optional
+    # extras_require={  # Optional
     #    'dev': ['check-manifest'],
     #    'test': ['coverage'],
-    #},
+    # },
 
     # If there are data files included in your packages that need to be
     # installed, specify them here.
     #
     # If using Python 2.6 or earlier, then these have to be included in
     # MANIFEST.in as well.
-    #package_data={  # Optional
+    # package_data={  # Optional
     #    'sample': ['package_data.dat'],
-    #},
+    # },
 
     # Although 'package_data' is the preferred approach, in some case you may
     # need to place data files outside of your packages. See:
     # http://docs.python.org/3.4/distutils/setupscript.html#installing-additional-files
     #
     # In this case, 'data_file' will be installed into '<sys.prefix>/my_data'
-    #data_files=[('my_data', ['data/data_file'])],  # Optional
+    # data_files=[('my_data', ['data/data_file'])],  # Optional
 
     # To provide executable scripts, use entry points in preference to the
     # "scripts" keyword. Entry points provide cross-platform support and allow
@@ -218,9 +213,9 @@ setup(
     project_urls={  # Optional
         'Bug Reports': 'https://github.com/tachtler/check_hello_world/issues',
         'Source': 'https://github.com/tachtler/check_hello_world/',
-        'Homepage': 'https://www.tachtler-net',        
+        'Homepage': 'https://www.tachtler-net',
     },
     
     # Tachtler - NEW -
-    zip_safe = False
+    zip_safe=False
 )
