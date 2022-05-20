@@ -397,7 +397,7 @@ if __name__ == "__main__":
         import pstats
         PROFILE_FILENAME = 'check_hello_world_profile.bin'
         cProfile.run('main()', PROFILE_FILENAME)
-        STATS_FILE = open("check_hello_world_profile_stats.txt", "w")
+        STATS_FILE = open("check_hello_world_profile_stats.txt", "w", encoding="utf8")
         PRINT = pstats.Stats(PROFILE_FILENAME, stream=STATS_FILE)
         STATS = PRINT.strip_dirs().sort_stats('cumulative')
         STATS.print_stats()
