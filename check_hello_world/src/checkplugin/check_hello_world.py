@@ -3,10 +3,10 @@
 '''
 check_hello_world.py is a basic nagios/icinga plugin for demonstration purpose.
 
-@copyright:  2020 Klaus Tachtler. All rights reserved.
+@copyright:  2022 Klaus Tachtler. All rights reserved.
 @author:     Klaus Tachtler
 @contact:    klaus@tachtler.net
-@deffield    updated: 2020-04-19
+@deffield    updated: 2022-05-20
 @license:
 
   GNU GENERAL PUBLIC LICENSE
@@ -40,7 +40,7 @@ import nagiosplugin
 __all__ = []
 __version__ = '0.1.2'
 __date__ = '2020-04-19'
-__updated__ = '2020-04-24'
+__updated__ = '2022-05-20'
 __author__ = 'Klaus Tachtler <klaus@tachtler.net>'
 __organisation__ = 'Klaus Tachtler'
 
@@ -397,10 +397,9 @@ if __name__ == "__main__":
         import pstats
         PROFILE_FILENAME = 'check_hello_world_profile.bin'
         cProfile.run('main()', PROFILE_FILENAME)
-        STATS_FILE = open("check_hello_world_profile_stats.txt", "w", encoding="utf8")
-        PRINT = pstats.Stats(PROFILE_FILENAME, stream=STATS_FILE)
-        STATS = PRINT.strip_dirs().sort_stats('cumulative')
-        STATS.print_stats()
-        STATS_FILE.close()
+        with open("check_hello_world_profile_stats.txt", "w", encoding="utf8") as file:
+          PRINT = pstats.Stats(PROFILE_FILENAME, stream=file)
+          STATS = PRINT.strip_dirs().sort_stats('cumulative')
+          STATS.print_stats()
         sys.exit(__OK__)
     sys.exit(main())
